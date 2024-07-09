@@ -1,11 +1,14 @@
-const expect = @import("std").testing.expect;
+const std = @import("std");
+const expect = std.testing.expect;
 
-test "switch expression" {
-    var x: i8 = 10;
-    x = switch (x) {
-        -1...1 => -x,
-        10, 100 => @divExact(x, 10),
-        else => x,
-    };
-    try expect(x == 1);
+fn total(values: []const u8) usize {
+    var sum: usize = 0;
+    for (values) |v| sum += v;
+    return sum;
+}
+
+test "slices" {
+    const array = [_]u8{ 1, 2, 3, 4, 5 };
+    const slice = array[0..3];
+    try expect(total(slice) == 6);
 }
