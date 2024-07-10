@@ -1,14 +1,15 @@
-const std = @import("std");
-const expect = std.testing.expect;
+const expect = @import("std").testing.expect;
 
-fn total(values: []const u8) usize {
-    var sum: usize = 0;
-    for (values) |v| sum += v;
-    return sum;
-}
+const Tag = enum { a, b, c };
 
-test "slices" {
-    const array = [_]u8{ 1, 2, 3, 4, 5 };
-    const slice = array[0..3];
-    try expect(total(slice) == 6);
+const Tagged = union(Tag) { a: u8, b: f32, c: bool };
+
+test "switch on tagged union" {
+    var value = Tagged{ .b = 1.5 };
+    switch (value) {
+        .a => |*byte| byte.* += 1,
+        .b => |*float| float.* *= 2,
+        .c => |*b| b.* = !b.*,
+    }
+    try expect(value.b == 3);
 }
